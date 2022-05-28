@@ -12,24 +12,32 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
             KC_TAB, KC_QUOT, KC_COMM, KC_DOT, KC_P, KC_Y, KC_F, KC_G, KC_C, KC_R, KC_L, KC_DEL,
             KC_LCTL, KC_A, KC_O, KC_E, KC_U, KC_I, KC_D, KC_H, KC_T, KC_N, KC_S, KC_ENT,
             KC_LSFT, KC_SLSH, KC_Q, KC_J, KC_K, KC_X, KC_NO, KC_NO, KC_B, KC_M, KC_W, KC_V, KC_Z, KC_RSFT,
-            LSFT(KC_LCTRL), KC_LALT, MO(1), MO(2), KC_NO, KC_LGUI, KC_SPC, MO(1), KC_NO, KC_NO
+            LSFT(KC_LCTRL), KC_LALT, MO(1), MO(2), MO(3), KC_LGUI, KC_SPC, MO(1), KC_NO, KC_NO
         ),
         // Symbols layer
         [1] = LAYOUT(
             KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO,
             KC_TILD, KC_GRV, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_LCBR, KC_RCBR, KC_SLSH, KC_PIPE, KC_BSLS,
-            KC_LCTL, KC_MINS, KC_EQL, KC_MACRO_LARROW, KC_MACRO_RARROW, KC_NO, KC_NO, KC_LPRN, KC_RPRN, KC_COLN, KC_SCLN, KC_NO,
-            KC_LSFT, KC_NO, KC_NO, KC_PGUP, KC_PGDN, KC_NO, KC_NO, KC_NO, KC_NO, KC_LBRC, KC_RBRC, KC_MINS, KC_UNDS, KC_RSFT,
-            KC_NO, KC_NO, KC_TRNS, KC_NO, KC_NO, KC_NO, KC_NO, KC_TRNS, KC_NO, KC_NO
+            KC_LCTL, KC_PLUS, KC_EQL, KC_MACRO_LARROW, KC_MACRO_RARROW, KC_NO, KC_NO, KC_LPRN, KC_RPRN, KC_COLN, KC_SCLN, KC_ENT,
+            KC_LSFT, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_LBRC, KC_RBRC, KC_MINS, KC_UNDS, KC_RSFT,
+            KC_NO, KC_NO, KC_TRNS, KC_NO, KC_NO, KC_NO, KC_SPC, KC_TRNS, KC_NO, KC_NO
         ),
-        // Left-hand nav
+        // Web nav
         [2] = LAYOUT(
-            KC_NO, LCTL(KC_1), LCTL(KC_2), LCTL(KC_3), LCTL(KC_4), LCTL(KC_5), KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_BSPC,
-            LCTL(KC_TAB), LALT(KC_LEFT), LCTL(KC_W), KC_UP, LCTL(KC_R), LALT(KC_RGHT), KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_DEL,
-            LSFT(LCTL(KC_TAB)), LCTL(KC_LEFT), KC_LEFT, KC_DOWN, KC_RGHT, LCTL(KC_RGHT), KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO,
+            KC_NO, LCTL(KC_1), LCTL(KC_2), LCTL(KC_3), LCTL(KC_4), LCTL(KC_5), KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO,
+            LCTL(KC_TAB), LALT(KC_LEFT), LCTL(KC_W), KC_HOME, KC_END, LCTL(KC_R), KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO,
+            LSFT(LCTL(KC_TAB)), KC_NO, KC_NO, KC_PGUP, KC_PGDN, LCTL(KC_T), KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO,
+            KC_LSFT, LCTL(KC_L), KC_NO, LCTL(KC_C), LCTL(KC_V), LCTL(KC_N), KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_RSFT,
+            KC_NO, KC_NO, KC_NO, KC_TRNS, KC_NO, KC_NO, KC_NO, KC_SPC, KC_TRNS, KC_NO, KC_NO
+        ),
+        // Editor hotkeys
+        [3] = LAYOUT(
+            KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO,
+            KC_NO, LCTL(KC_A), KC_NO, KC_UP, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO,
+            KC_NO, LCTL(KC_LEFT), KC_LEFT, KC_DOWN, KC_RIGHT, LCTL(KC_RIGHT), KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO,
             KC_LSFT, LCTL(KC_Z), LCTL(KC_X), LCTL(KC_C), LCTL(KC_V), LCTL(KC_K), KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_RSFT,
-            KC_NO, KC_NO, KC_NO, KC_TRNS, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO
-        )
+            KC_NO, KC_NO, KC_NO, KC_TRNS, KC_NO, KC_NO, KC_NO, KC_SPC, KC_TRNS, KC_NO, KC_NO
+        )   
 };
 #ifdef OLED_ENABLE
 
@@ -52,10 +60,13 @@ static void print_status_narrow(void) {
             oled_write_P(PSTR("Base\n"), false);
             break;
         case 1:
-            oled_write_P(PSTR("Symb\n"), false);
+            oled_write_P(PSTR("Symbol\n"), false);
             break;
         case 2:
-            oled_write_P(PSTR("Nav\n"), false);
+            oled_write_P(PSTR("WebNav\n"), false);
+            break;
+        case 3:
+            oled_write_P(PSTR("Edit\n"), false);
             break;
         default:
             oled_write_ln_P(PSTR("Undef"), false);
@@ -85,12 +96,12 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     switch (keycode) {
         case KC_MACRO_LARROW:
             if (record->event.pressed) {
-                SEND_STRING(SS_LSFT(SS_TAP(X_COMMA)) SS_DELAY(100) SS_TAP(X_MINUS));
+                SEND_STRING(SS_LSFT(SS_TAP(X_COMMA)) SS_DELAY(10) SS_TAP(X_MINUS));
             }
             break;
         case KC_MACRO_RARROW:
             if (record->event.pressed) {
-                SEND_STRING(SS_TAP(X_MINUS) SS_DELAY(100) SS_LSFT(SS_TAP(X_DOT)));
+                SEND_STRING(SS_TAP(X_MINUS) SS_DELAY(10) SS_LSFT(SS_TAP(X_DOT)));
             }
             break;
     }
