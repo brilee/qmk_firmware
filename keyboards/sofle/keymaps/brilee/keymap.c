@@ -12,10 +12,18 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
             KC_TAB, KC_QUOT, KC_COMM, KC_DOT, KC_P, KC_Y, KC_F, KC_G, KC_C, KC_R, KC_L, KC_DEL,
             KC_LCTL, KC_A, KC_O, KC_E, KC_U, KC_I, KC_D, KC_H, KC_T, KC_N, KC_S, KC_ENT,
             KC_LSFT, KC_SLSH, KC_Q, KC_J, KC_K, KC_X, KC_NO, KC_NO, KC_B, KC_M, KC_W, KC_V, KC_Z, KC_RSFT,
-            LSFT(KC_LCTRL), KC_LALT, MO(1), MO(2), MO(3), KC_LGUI, KC_SPC, MO(1), KC_NO, KC_NO
+            LSFT(KC_LCTRL), KC_LALT, MO(2), MO(3), MO(4), KC_LGUI, KC_SPC, MO(2), KC_NO, DF(1)
+        ),
+        // QWERTY
+        [1] = LAYOUT(
+            KC_ESC, KC_1, KC_2, KC_3, KC_4, KC_5, KC_6, KC_7, KC_8, KC_9, KC_0, KC_BSPC,
+            KC_TAB, KC_Q, KC_W, KC_E, KC_R, KC_T, KC_Y, KC_U, KC_I, KC_O, KC_P, KC_DEL,
+            KC_LCTL, KC_A, KC_S, KC_D, KC_F, KC_G, KC_H, KC_J, KC_K, KC_L, KC_SCLN, KC_ENT,
+            KC_LSFT, KC_Z, KC_X, KC_C, KC_V, KC_B, KC_NO, KC_NO, KC_N, KC_M, KC_COMM, KC_DOT, KC_SLSH, KC_RSFT,
+            LSFT(KC_LCTRL), KC_LALT, MO(2), MO(3), KC_SPC, KC_LGUI, KC_SPC, MO(2), KC_NO, DF(0)
         ),
         // Symbols layer
-        [1] = LAYOUT(
+        [2] = LAYOUT(
             KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO,
             KC_TILD, KC_GRV, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_LCBR, KC_RCBR, KC_SLSH, KC_PIPE, KC_BSLS,
             KC_LCTL, KC_PLUS, KC_EQL, KC_MACRO_LARROW, KC_MACRO_RARROW, KC_NO, KC_NO, KC_LPRN, KC_RPRN, KC_COLN, KC_SCLN, KC_ENT,
@@ -23,7 +31,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
             KC_NO, KC_NO, KC_TRNS, KC_NO, KC_NO, KC_NO, KC_SPC, KC_TRNS, KC_NO, KC_NO
         ),
         // Web nav
-        [2] = LAYOUT(
+        [3] = LAYOUT(
             KC_NO, LCTL(KC_1), LCTL(KC_2), LCTL(KC_3), LCTL(KC_4), LCTL(KC_5), KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO,
             LCTL(KC_TAB), LALT(KC_LEFT), LCTL(KC_W), KC_HOME, KC_END, LCTL(KC_R), KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO,
             LSFT(LCTL(KC_TAB)), KC_NO, KC_NO, KC_PGUP, KC_PGDN, LCTL(KC_T), KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO,
@@ -31,13 +39,13 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
             KC_NO, KC_NO, KC_NO, KC_TRNS, KC_NO, KC_NO, KC_NO, KC_SPC, KC_TRNS, KC_NO, KC_NO
         ),
         // Editor hotkeys
-        [3] = LAYOUT(
+        [4] = LAYOUT(
             KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO,
-            KC_NO, LCTL(KC_A), KC_NO, KC_UP, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO,
+            KC_NO, LCTL(KC_A), KC_NO, KC_UP, LCTL(KC_MINS), LCTL(KC_EQL), KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO,
             KC_NO, LCTL(KC_LEFT), KC_LEFT, KC_DOWN, KC_RIGHT, LCTL(KC_RIGHT), KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO,
             KC_LSFT, LCTL(KC_Z), LCTL(KC_X), LCTL(KC_C), LCTL(KC_V), LCTL(KC_K), KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_RSFT,
             KC_NO, KC_NO, KC_NO, KC_TRNS, KC_NO, KC_NO, KC_NO, KC_SPC, KC_TRNS, KC_NO, KC_NO
-        )   
+        ),
 };
 #ifdef OLED_ENABLE
 
@@ -57,15 +65,22 @@ static void print_status_narrow(void) {
     oled_write_ln_P(PSTR("LAYER"), false);
     switch (get_highest_layer(layer_state)) {
         case 0:
-            oled_write_P(PSTR("Base\n"), false);
-            break;
         case 1:
-            oled_write_P(PSTR("Symbol\n"), false);
+            if (layer_state_cmp(default_layer_state, 0)) {
+                oled_write_P(PSTR("Dvorak\n"), false);
+            } else if (layer_state_cmp(default_layer_state, 1)) {
+                oled_write_P(PSTR("QWERTY\n"), false);
+            } else {
+                oled_write_P(PSTR("???\n"), false);
+            }
             break;
         case 2:
-            oled_write_P(PSTR("WebNav\n"), false);
+            oled_write_P(PSTR("Symbol\n"), false);
             break;
         case 3:
+            oled_write_P(PSTR("WebNav\n"), false);
+            break;
+        case 4:
             oled_write_P(PSTR("Edit\n"), false);
             break;
         default:
@@ -114,9 +129,11 @@ bool encoder_update_user(uint8_t index, bool clockwise) {
     // my encoders are installed backwards so the CW/CCW are swapped.
     if (index == 0) {
         if (clockwise) {
-            SEND_STRING(SS_LCTL(SS_TAP(X_MINS)));
+            tap_code(KC_UP);	
+            //SEND_STRING(SS_LCTL(SS_TAP(X_MINS)));
         } else {
-            SEND_STRING(SS_LCTL(SS_TAP(X_EQL)));
+            tap_code(KC_DOWN);
+            //SEND_STRING(SS_LCTL(SS_TAP(X_EQL)));
         }
     } else if (index == 1) {
         if (clockwise) {
